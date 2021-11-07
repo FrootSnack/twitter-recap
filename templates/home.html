@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TwitterRecap</title>
+</head>
+<body>
+    <div class="center">
+        <h1>Twitter Recap</h1>
+        <form action="/validate" method="POST">
+            <input name="search-box" type="text" placeholder="Please enter a twitch VOD link or ID">
+            <input type="submit">
+        </form>
+    </div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    function search(){
+        $.get("/validate_and_view/", data=$("#search-box").val())
+    }
+</script>
+</html>

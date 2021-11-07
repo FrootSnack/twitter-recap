@@ -1,0 +1,5 @@
+{% for trend in associated_trends %}
+    <button class="trend-button" id="trend-{{ trend.keyword }}" onclick="jumpto({{ trend.start_time }})">
+        {{ to_stream_time(stream_start, trend.start_time) }}    {{ trend.keyword }} - {{ trend.volume }} tweets
+    </button>
+{% endfor %}

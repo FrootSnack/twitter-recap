@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Replaying Twitch VOD</title>
+    <link rel="stylesheet" href="{{ url_for("static", filename="style.css") }}">
+</head>
+<body>
+    <script src= "https://player.twitch.tv/js/embed/v1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- left panel to include the twitch side-->
+    <div id="twitch-side">
+        <div id="player"></div>
+    </div>
+    <!-- right panel to include twitter data-->
+    <div id="twitter-side">
+        <div id="trends-box">
+
+        </div>
+    </div>
+    <script type="text/javascript">
+        var options = {
+            width: "100%",
+            height: "500px",
+            video: "{{ vod.id }}"
+        };
+        var player = new Twitch.Player("player", options);
+        player.setVolume(0.5);
+        var intervalId = window.setInterval(function(){
+            //$("#timestamp").html("timestamp: " + player.getCurrentTime())
+        }, 500);
+
+        $.get("/trends/",
+            {"start_time": {{ vod.start_time.timestamp() }}, "end_time": {{ vod.end_time.timestamp() }}, "user_name": "{{ vod.user_name }}" },
+        function(data){
+            $("#trends-box").html(data)
+        })
+
+        function jumpto(timestamp){
+            seconds = timestamp - {{ vod.start_time.timestamp() }};
+            console.log("seeking to " + seconds)
+            player.seek(seconds);
+        }
+    </script>
+</body>
+</html>

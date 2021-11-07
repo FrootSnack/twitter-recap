@@ -1,0 +1,34 @@
+* {
+    box-sizing: border-box;
+}
+
+#twitter-side{
+    float:right;
+    width: 50%;
+    max-height: 100vh;
+    overflow: auto;
+    /*padding:1em;*/
+}
+
+#twitch-side {
+    float:left;
+    width: 50%;
+    padding:1em;
+    display:flex;
+    align-content: center;
+}
+
+#trends-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.trend-button {
+    font-size: 2.5em;
+    margin: 0.5em;
+    padding: 0.5em;
+}
+
+body {
+    max-height: 100vh;
+}
