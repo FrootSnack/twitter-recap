@@ -77,15 +77,16 @@ def get_associated_words(term=''):
     # {word (string): count (integer)}
     tweets = api.search_tweets(q=term, lang='en', result_type='popular', count=100, tweet_mode='extended')
     for tweet in tweets:
-        for w in tweet.full_text.split():
-            w = w.lower()
-            w = re.sub('((www\.[^\s]+)|(https?://[^\s]+))', '', w)  # remove URLs
-            w = re.sub('[\t\n\r\f\v]', ' ', w)  # remove non-space whitespace
-            w = re.sub(r'#([^\s]+)', r'\1', w)  # remove the # in #hashtag
-            w = re.sub('\\\'', '', w)  # remove apostrophes
-            w = re.sub('[^a-z\s]', ' ', w)  # remove odd characters and numbers
-            w = re.sub('[\s]{2,}', ' ', w)  # remove multiple spaces
-            w = re.sub('^[ ]+|[ ]+$', '', w)  # remove spaces at the beginning and end of tweets
+        text = tweet.full_text
+        text = text.lower()
+        text = re.sub('((www\.[^\s]+)|(https?://[^\s]+))', '', text)  # remove URLs
+        text = re.sub('[\t\n\r\f\v]', ' ', text)  # remove non-space whitespace
+        text = re.sub(r'#([^\s]+)', r'\1', text)  # remove the # in #hashtag
+        text = re.sub('\\\'', '', text)  # remove apostrophes
+        text = re.sub('[^a-z\s]', ' ', text)  # remove odd characters and numbers
+        text = re.sub('[\s]{2,}', ' ', text)  # remove multiple spaces
+        text = re.sub('^[ ]+|[ ]+$', '', text)  # remove spaces at the beginning and end of tweets
+        for w in text.split():
             if w != '' and w != term and w not in stopwords.words('english'):
                 if w not in word_counts.keys():
                     word_counts[w] = 1
