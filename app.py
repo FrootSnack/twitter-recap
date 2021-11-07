@@ -4,6 +4,7 @@ import sqlite3
 from flask import Flask, render_template, request, redirect, flash, Response
 import requests
 from datetime import datetime, timedelta
+import config_keys
 
 app = Flask(__name__)
 
@@ -14,11 +15,11 @@ def to_stream_time(stream_start, timestamp):
 
 app.jinja_env.globals.update(to_stream_time=to_stream_time)
 
-app.config["SECRET_KEY"] = "uu823chidaf287ag93"
+app.config["SECRET_KEY"] = config_keys.flask_secret
 
-client_id = "6gucilctx8qc2bv2uo18epb2auqbbr"
-client_secret = "prt2orckp3ejrga7wnmpkqi3r1rlyn"
-access_token = "a60lr3a6fx59842ulqy3v0wrjasz50"
+client_id = config_keys.twitch_client_id
+client_secret = config_keys.twitch_client_secret
+access_token = config_keys.twitch_access_token
 
 
 @dataclasses.dataclass
@@ -154,8 +155,7 @@ def get_prec(source, stop, start=None):
 
 def regenerate_token():
     global access_token
-    response = requests.post(
-        f'POST https://id.twitch.tv/oauth2/token?client_id={client_id}&client_secret={client_secret}&grant_type=client_credentials')
+    response = requests.post(f'https://id.twitch.tv/oauth2/token?client_id={client_id}&client_secret={client_secret}&grant_type=client_credentials')
     data = response.json()
     access_token = data["access_token"]
     print(f"REGENERATED ACCESS TOKEN, PLEASE CHANGE!! NEW ACCESS TOKEN: \"{access_token}\"")
