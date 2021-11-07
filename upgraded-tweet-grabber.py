@@ -136,6 +136,6 @@ while True:
         words = get_associated_words(t['keyword'])
         for word, count in words.items():
             if count >= 5:
-                execute_query(connection, insert_associated_words, (unix_time, t['keyword'], word))
+                execute_query(connection, insert_associated_words, (int(unix_time), t['keyword'], word))
     print('Sleeping')
     time.sleep(60*5)  # can only request new trends once every five minutes
