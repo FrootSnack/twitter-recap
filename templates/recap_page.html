@@ -3,25 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>Replaying Twitch VOD</title>
-    <link rel="stylesheet" href="{{ url_for("static", filename="style.css") }}">
+    <link rel="stylesheet" href="{{ url_for("static", filename="recap_page.css") }}">
 </head>
 <body>
     <script src= "https://player.twitch.tv/js/embed/v1.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- header  -->
+    <ul id="navbar">
+        <li><a href="/"><i class="material-icons">home</i></a></li>
+        <li>{% include "search.html" %}</li>
+    </ul>
     <!-- left panel to include the twitch side-->
     <div id="twitch-side">
+        <div id="stream-title" class="stream-data">{{ vod.title }}</div>
         <div id="player"></div>
+        <div id="streamer-name" class="stream-data">{{ vod.user_name }}</div>
     </div>
     <!-- right panel to include twitter data-->
     <div id="twitter-side">
-        <div id="trends-box">
+        <ul id="trends-box">
 
-        </div>
+        </ul>
     </div>
     <script type="text/javascript">
         var options = {
             width: "100%",
-            height: "500px",
+            height: "100%",
             video: "{{ vod.id }}"
         };
         var player = new Twitch.Player("player", options);

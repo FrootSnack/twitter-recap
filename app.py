@@ -80,7 +80,7 @@ def get_associated_trends():
 
     for row in cur.execute("""
         SELECT trends.* FROM trends WHERE (timestamp BETWEEN ? AND ?) AND trends.keyword in 
-        (SELECT trend FROM associated_words WHERE word = LOWER(?) and associated_words.timestamp = trends.timestamp) 
+        (SELECT keyword FROM associated_words WHERE associated_word = LOWER(?) and associated_words.timestamp = trends.timestamp) 
         ORDER BY timestamp ASC;
     """, (start_time, end_time, user_name)):
         timestamp = row[0]

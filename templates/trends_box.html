@@ -1,5 +1,21 @@
+{% if associated_trends|length > 0 %}
 {% for trend in associated_trends %}
-    <button class="trend-button" id="trend-{{ trend.keyword }}" onclick="jumpto({{ trend.start_time }})">
-        {{ to_stream_time(stream_start, trend.start_time) }}    {{ trend.keyword }} - {{ trend.volume }} tweets
-    </button>
+    <li class="trend-button" id="trend-{{ trend.keyword }}">
+        <a href="javascript:jumpto({{ trend.start_time }})">
+            <div class="trend">
+                <div class="trend-start">{{ to_stream_time(stream_start, trend.start_time) }}</div>
+                <div class="trend-keyword">{{ trend.keyword }}</div>
+                <div class="trend-volume">{{ "{:,}".format(trend.volume) }} tweets</div>
+            </div>
+        </a>
+    </li>
 {% endfor %}
+{% else %}
+    <div style="height:100%;width:100%;display: flex;
+  justify-content: center;
+  align-items: center;">
+        <div style="width:fit-content; font-size:3em;">
+            No trends to display for this stream
+        </div>
+    </div>
+{% endif %}
