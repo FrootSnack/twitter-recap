@@ -64,7 +64,7 @@ def get_top_trending():
         # loops through trending keywords in descending order of volume
         for f in sorted_trending:
             term = f['keyword']
-            if term not in word_list and term_counter < 12 and f['loc'] == loc:
+            if term_counter < 12 and f['loc'] == loc and term not in word_list:
                 out.append(f)
                 word_list.append(term)
                 term_counter += 1
