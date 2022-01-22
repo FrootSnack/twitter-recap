@@ -76,6 +76,7 @@ def get_associated_words(term=''):
     word_counts = {}  # will be in the format below:
     # {word (string): count (integer)}
     tweets = api.search_tweets(q=term, lang='en', result_type='popular', count=100, tweet_mode='extended')
+    # sanitize data input for processing
     for tweet in tweets:
         text = tweet.full_text
         text = text.lower()
@@ -128,14 +129,12 @@ execute_query(connection, create_index)
 while True:
     unix_time = time.time()
     trending = get_top_trending()
+    insert_keywords = "INSERT INTO trends (timestamp, volume, keyword) VALUES (?, ?, ?);"
+    insert_associated_words = "INSERT INTO associated_words (timestamp, keyword, associated_word) VALUES (?, ?, ?);"
     for t in trending:
-        insert_keywords = "INSERT INTO trends (timestamp, volume, keyword) VALUES (?, ?, ?);"
         execute_query(connection, insert_keywords, (int(unix_time), t['volume'], t['keyword']))
-
-        insert_associated_words = "INSERT INTO associated_words (timestamp, keyword, associated_word) VALUES (?, ?, ?);"
         words = get_associated_words(t['keyword'])
         for word, count in words.items():
-            if count >= 5:
-                execute_query(connection, insert_associated_words, (int(unix_time), t['keyword'], word))
+            if count >= 5: execute_query(connection, insert_associated_words, (int(unix_time), t['keyword'], word))
     print('Sleeping')
     time.sleep(60*5)  # can only request new trends once every five minutes
