@@ -2,6 +2,7 @@ import re
 import sqlite3
 import time
 from sqlite3 import Error
+from typing import List
 
 import tweepy
 from nltk.corpus import stopwords
@@ -51,7 +52,7 @@ def execute_read_query(connection, query):
         print(f"The error '{e}' occurred.")
 
 
-def get_top_trending() -> List[d]:
+def get_top_trending():
     out = []  # list of dictionaries including keywords (no default value) and tweet volume (defaults to None)
     word_list = []  # list of keywords; used to remove duplicates
     # loops through locations in the following order: worldwide, USA, Canada, UK, Australia
@@ -136,6 +137,7 @@ while True:
         execute_query(connection, INSERT_KEYWORDS, (unix_time, t['volume'], t['keyword']))
         words = get_associated_words(t['keyword'])
         for word, count in words.items():
-            if count >= 5: execute_query(connection, INSERT_ASSOCIATED_WORDS, (int(unix_time), t['keyword'], word))
+            if count >= 5:
+                execute_query(connection, INSERT_ASSOCIATED_WORDS, (int(unix_time), t['keyword'], word))
     print('Sleeping')
     time.sleep(60*5)  # request new trends once every five minutes
