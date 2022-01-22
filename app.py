@@ -1,9 +1,15 @@
 import dataclasses
 import sqlite3
+from datetime import datetime
+from datetime import timedelta
 
-from flask import Flask, render_template, request, redirect, flash, Response
 import requests
-from datetime import datetime, timedelta
+from flask import Flask
+from flask import flash
+from flask import redirect
+from flask import render_template
+from flask import request
+
 import config_keys
 
 app = Flask(__name__)
@@ -119,7 +125,7 @@ def get_vod(video_id):
                                 "Authorization": f"Bearer {access_token}"})
     if response.status_code != 200:
         raise ValueError(f"Request returned status code {response.status_code}")
-    data = response.json()["data"][0]
+    data = response.json()["KEYS"][0]
 
     start_time = datetime.strptime(data["created_at"], "%Y-%m-%dT%H:%M:%SZ")
     duration = timedelta(

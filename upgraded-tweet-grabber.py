@@ -1,15 +1,15 @@
-import config_keys
-import nltk
 import re
 import sqlite3
 import time
-import tweepy
-from nltk.corpus import stopwords
-from oauth2client.service_account import ServiceAccountCredentials
 from sqlite3 import Error
 
-auth = tweepy.OAuthHandler(consumer_key=config_keys.consumer_key, consumer_secret=config_keys.consumer_secret)
-auth.set_access_token(config_keys.access_token_1, config_keys.access_token_2)
+import tweepy
+from nltk.corpus import stopwords
+
+import config_keys
+
+auth = tweepy.OAuthHandler(consumer_key=config_keys.CONSUMER_KEY, consumer_secret=config_keys.CONSUMER_SECRET)
+auth.set_access_token(config_keys.ACCESS_TOKEN_1, config_keys.ACCESS_TOKEN_2)
 api = tweepy.API(auth)
 
 # WOEIDs for the following regions: worldwide, USA, Canada, UK, Australia (English-speaking countries with highest Twitch traffic)
@@ -76,7 +76,7 @@ def get_associated_words(term=''):
     word_counts = {}  # will be in the format below:
     # {word (string): count (integer)}
     tweets = api.search_tweets(q=term, lang='en', result_type='popular', count=100, tweet_mode='extended')
-    # sanitize data input for processing
+    # sanitize KEYS input for processing
     for tweet in tweets:
         text = tweet.full_text
         text = text.lower()
