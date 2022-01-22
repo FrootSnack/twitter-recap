@@ -1,21 +1,21 @@
-import time
-import sqlite3
-import tweepy
+import config_keys
 import nltk
 import re
-import config_keys
+import sqlite3
+import time
+import tweepy
 from nltk.corpus import stopwords
-from sqlite3 import Error
 from oauth2client.service_account import ServiceAccountCredentials
+from sqlite3 import Error
 
 auth = tweepy.OAuthHandler(consumer_key=config_keys.consumer_key, consumer_secret=config_keys.consumer_secret)
 auth.set_access_token(config_keys.access_token_1, config_keys.access_token_2)
 api = tweepy.API(auth)
 
 # WOEIDs for the following regions: worldwide, USA, Canada, UK, Australia (English-speaking countries with highest Twitch traffic)
-loc_ids = (1, 23424977, 23424775, 23424975, 23424748)
+LOC_IDS = (1, 23424977, 23424775, 23424975, 23424748)
 
-sql_path = "trends.sqlite"
+SQL_PATH = "trends.sqlite"
 
 
 def create_connection(path):
@@ -51,11 +51,11 @@ def execute_read_query(connection, query):
         print(f"The error '{e}' occurred.")
 
 
-def get_top_trending():
+def get_top_trending() -> List[d]:
     out = []  # list of dictionaries including keywords (no default value) and tweet volume (defaults to None)
     word_list = []  # list of keywords; used to remove duplicates
     # loops through locations in the following order: worldwide, USA, Canada, UK, Australia
-    for loc in loc_ids:
+    for loc in LOC_IDS:
         term_counter = 0
         fetched_trending = [
             {'keyword': item['name'], 'volume': item['tweet_volume'] if item['tweet_volume'] is not None else 0,
@@ -97,7 +97,7 @@ def get_associated_words(term=''):
 
 
 # time is stored as Unix time
-create_words_table = """
+CREATE_WORDS_TABLE = """
 CREATE TABLE IF NOT EXISTS associated_words (
 timestamp INTEGER NOT NULL,
 keyword TEXT NOT NULL,
@@ -105,15 +105,15 @@ associated_word TEXT NOT NULL
 );
 """
 
-create_words_index = "CREATE INDEX IF NOT EXISTS idx_text ON associated_words (keyword)"
+CREATE_WORDS_INDEX = "CREATE INDEX IF NOT EXISTS idx_text ON associated_words (keyword)"
 
-connection = create_connection(sql_path)
+connection = create_connection(SQL_PATH)
 
-execute_query(connection, create_words_table)
-execute_query(connection, create_words_index)
+execute_query(connection, CREATE_WORDS_TABLE)
+execute_query(connection, CREATE_WORDS_INDEX)
 
 # time is stored as Unix time
-create_trends_table = """
+CREATE_TRENDS_TABLE = """
 CREATE TABLE IF NOT EXISTS trends (
 timestamp INTEGER NOT NULL,
 volume INTEGER,
@@ -121,20 +121,21 @@ keyword TEXT
 );
 """
 
-create_index = "CREATE INDEX IF NOT EXISTS idx_text ON trends (keyword)"
+CREATE_INDEX = "CREATE INDEX IF NOT EXISTS idx_text ON trends (keyword)"
 
-execute_query(connection, create_trends_table)
-execute_query(connection, create_index)
+execute_query(connection, CREATE_TRENDS_TABLE)
+execute_query(connection, CREATE_INDEX)
+
+INSERT_KEYWORDS = "INSERT INTO trends (timestamp, volume, keyword) VALUES (?, ?, ?);"
+INSERT_ASSOCIATED_WORDS = "INSERT INTO associated_words (timestamp, keyword, associated_word) VALUES (?, ?, ?);"
 
 while True:
-    unix_time = time.time()
+    unix_time = int(time.time())
     trending = get_top_trending()
-    insert_keywords = "INSERT INTO trends (timestamp, volume, keyword) VALUES (?, ?, ?);"
-    insert_associated_words = "INSERT INTO associated_words (timestamp, keyword, associated_word) VALUES (?, ?, ?);"
     for t in trending:
-        execute_query(connection, insert_keywords, (int(unix_time), t['volume'], t['keyword']))
+        execute_query(connection, INSERT_KEYWORDS, (unix_time, t['volume'], t['keyword']))
         words = get_associated_words(t['keyword'])
         for word, count in words.items():
-            if count >= 5: execute_query(connection, insert_associated_words, (int(unix_time), t['keyword'], word))
+            if count >= 5: execute_query(connection, INSERT_ASSOCIATED_WORDS, (int(unix_time), t['keyword'], word))
     print('Sleeping')
-    time.sleep(60*5)  # can only request new trends once every five minutes
+    time.sleep(60*5)  # request new trends once every five minutes
