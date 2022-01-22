@@ -14,3 +14,5 @@ flask_secret = KEYS['flask_secret']
 twitch_client_id = KEYS['twitch_client_id']
 twitch_client_secret = KEYS['twitch_client_secret']
 twitch_access_token = KEYS['twitch_access_token']
+
+FILE.close()
