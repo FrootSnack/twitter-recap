@@ -21,11 +21,11 @@ def to_stream_time(stream_start, timestamp):
 
 app.jinja_env.globals.update(to_stream_time=to_stream_time)
 
-app.config["SECRET_KEY"] = config_keys.flask_secret
+app.config["SECRET_KEY"] = config_keys.FLASK_SECRET
 
-client_id = config_keys.twitch_client_id
-client_secret = config_keys.twitch_client_secret
-access_token = config_keys.twitch_access_token
+client_id = config_keys.TWITCH_CLIENT_ID
+client_secret = config_keys.TWITCH_CLIENT_SECRET
+access_token = config_keys.TWITCH_ACCESS_TOKEN
 
 
 @dataclasses.dataclass

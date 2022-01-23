@@ -10,9 +10,9 @@ ACCESS_TOKEN_1 = KEYS['ACCESS_TOKEN_1']
 ACCESS_TOKEN_2 = KEYS['ACCESS_TOKEN_2']
 
 # front-end
-flask_secret = KEYS['flask_secret']
-twitch_client_id = KEYS['twitch_client_id']
-twitch_client_secret = KEYS['twitch_client_secret']
-twitch_access_token = KEYS['twitch_access_token']
+FLASK_SECRET = KEYS['FLASK_SECRET']
+TWITCH_CLIENT_ID = KEYS['TWITCH_CLIENT_ID']
+TWITCH_CLIENT_SECRET = KEYS['TWITCH_CLIENT_SECRET']
+TWITCH_ACCESS_TOKEN = KEYS['TWITCH_ACCESS_TOKEN']
 
 FILE.close()
