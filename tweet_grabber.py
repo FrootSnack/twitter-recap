@@ -2,7 +2,6 @@ import re
 import sqlite3
 import time
 from sqlite3 import Error
-from typing import List
 
 import tweepy
 from nltk.corpus import stopwords
@@ -13,7 +12,8 @@ auth = tweepy.OAuthHandler(consumer_key=config_keys.CONSUMER_KEY, consumer_secre
 auth.set_access_token(config_keys.ACCESS_TOKEN_1, config_keys.ACCESS_TOKEN_2)
 api = tweepy.API(auth)
 
-# WOEIDs for the following regions: worldwide, USA, Canada, UK, Australia (English-speaking countries with highest Twitch traffic)
+# WOEIDs for the following regions: worldwide, USA, Canada, UK, Australia
+# (English-speaking countries with highest Twitch traffic)
 LOC_IDS = (1, 23424977, 23424775, 23424975, 23424748)
 
 SQL_PATH = "trends.sqlite"
