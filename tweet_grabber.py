@@ -5,6 +5,7 @@ from sqlite3 import Error
 
 import tweepy
 from nltk.corpus import stopwords
+from typing import Tuple, List
 
 import config_keys
 
@@ -19,7 +20,7 @@ LOC_IDS = (1, 23424977, 23424775, 23424975, 23424748)
 SQL_PATH = "trends.sqlite"
 
 
-def create_connection(path):
+def create_connection(path: str) -> sqlite3.Connection:
     connection = None
     try:
         connection = sqlite3.connect(path)
@@ -29,7 +30,7 @@ def create_connection(path):
         print(f"The error '{e}' occurred.")
 
 
-def execute_query(connection, query, vals=None):
+def execute_query(connection, query: str, vals: tuple = None):
     cursor = connection.cursor()
     try:
         if vals:
@@ -41,7 +42,7 @@ def execute_query(connection, query, vals=None):
         print(f"The error '{e}' occurred.")
 
 
-def execute_read_query(connection, query):
+def execute_read_query(connection, query: str) -> Tuple[tuple]:
     cursor = connection.cursor()
     result = None
     try:
@@ -52,7 +53,7 @@ def execute_read_query(connection, query):
         print(f"The error '{e}' occurred.")
 
 
-def get_top_trending():
+def get_top_trending() -> List[dict]:
     out = []  # list of dictionaries including keywords (no default value) and tweet volume (defaults to None)
     word_list = []  # list of keywords; used to remove duplicates
     # loops through locations in the following order: worldwide, USA, Canada, UK, Australia
@@ -73,7 +74,7 @@ def get_top_trending():
 
 
 # timestamp should be passed as an integer unix time
-def get_associated_words(term=''):
+def get_associated_words(term: str = '') -> dict:
     word_counts = {}  # will be in the format below:
     # {word (string): count (integer)}
     tweets = api.search_tweets(q=term, lang='en', result_type='popular', count=100, tweet_mode='extended')

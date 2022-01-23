@@ -113,12 +113,12 @@ def get_associated_trends():
     return render_template("trends_box.html", stream_start=start_time, associated_trends=associated_trends)
 
 
-def validate_token():
+def validate_token() -> bool:
     response = requests.get('https://id.twitch.tv/oauth2/validate', headers={"Authorization": f"Bearer {access_token}"})
     return response.status_code == 200
 
 
-def get_vod(video_id):
+def get_vod(video_id: int) -> VOD:
     response = requests.get(f'https://api.twitch.tv/helix/videos?id={video_id}',
                             headers={
                                 "Client-ID": client_id,
